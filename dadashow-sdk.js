@@ -6,12 +6,13 @@
 
 // ── 1. CONFIGURATION — REMPLACE ICI ─────────────────────────────
 const FIREBASE_CONFIG = {
- apiKey: "AIzaSyB1gvIK9g-hKNkPeM1mE0Rj80u8o_SIZWY",
-  authDomain: "dadashow-a9042.firebaseapp.com",
-  projectId: "dadashow-a9042",
-  storageBucket: "dadashow-a9042.firebasestorage.app",
-  messagingSenderId: "86530867080",
-  appId: "1:86530867080:web:2d81392b351f74e8c7c43d"
+  apiKey:            "AIzaSyATHTQ8H0qpkJe8qoBZsI7CZLjgrCPB8KU",
+  authDomain:        "dadashow-23305.firebaseapp.com",
+  databaseURL:       "https://dadashow-23305-default-rtdb.europe-west1.firebasedatabase.app",
+  projectId:         "dadashow-23305",
+  storageBucket:     "dadashow-23305.firebasestorage.app",
+  messagingSenderId: "863712017385",
+  appId:             "1:863712017385:web:04c0da3a35d971abe66978"
 };
 
 // ── 2. IMPORT FIREBASE (CDN) ─────────────────────────────────────
