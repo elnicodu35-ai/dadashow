@@ -6,13 +6,12 @@
 
 // ── 1. CONFIGURATION — REMPLACE ICI ─────────────────────────────
 const FIREBASE_CONFIG = {
-  apiKey:            "COLLE_TON_API_KEY_ICI",
-  authDomain:        "COLLE_TON_AUTH_DOMAIN_ICI",
-  databaseURL:       "COLLE_TON_DATABASE_URL_ICI",
-  projectId:         "COLLE_TON_PROJECT_ID_ICI",
-  storageBucket:     "COLLE_TON_STORAGE_BUCKET_ICI",
-  messagingSenderId: "COLLE_TON_MESSAGING_SENDER_ID_ICI",
-  appId:             "COLLE_TON_APP_ID_ICI"
+ apiKey: "AIzaSyB1gvIK9g-hKNkPeM1mE0Rj80u8o_SIZWY",
+  authDomain: "dadashow-a9042.firebaseapp.com",
+  projectId: "dadashow-a9042",
+  storageBucket: "dadashow-a9042.firebasestorage.app",
+  messagingSenderId: "86530867080",
+  appId: "1:86530867080:web:2d81392b351f74e8c7c43d"
 };
 
 // ── 2. IMPORT FIREBASE (CDN) ─────────────────────────────────────
