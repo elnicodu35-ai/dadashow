@@ -1,14 +1,90 @@
+/**
+ * Créer une nouvelle salle
+ * @param {string} hostName  - Nom du GM
+ * @param {string} mode      - "gorgees" | "classic"
+ * @returns {string} code    - Code 4 chiffres de la salle
+ */
+async function createRoom(hostName, mode = 'gorgees') {
+  const code = String(Math.floor(1000 + Math.random() * 9000));
 
-🏠
-➕ CRÉER
-🎟️ REJOINDRE
-🏆 SCORES
-DadaShow
-LE JEU DE SOIRÉE INTERACTIF, ET MIEUX QUE COD
-Jeux, buzzer, gorgées — sur grand écran
+  // Vérifier que la salle n'existe pas déjà
+  const existing = await fbGet(`rooms/${code}`);
+  if (existing) return createRoom(hostName, mode); // retry
 
-Firebase...
-🎮 Créer une partie
-🎟️ Rejoindre une salle
-Vous êtes prêts ?!
-￼
+  const teams = {
+    t0: { name: 'Les Flamants', color: '#FF2D9B', score: 0 },
+    t1: { name: 'Les Zappeurs', color: '#A020F0', score: 0 },
+    t2: { name: 'Les Vagues',   color: '#00D4FF', score: 0 },
+  };
+
+  await fbSet(`rooms/${code}`, {
+    meta: {
+      code,
+      host: hostName,
+      mode,
+      state: 'lobby',
+      currentGame: null,
+      createdAt: Date.now(),
+    },
+    teams,
+    players: {},
+    game: { type: null, state: 'idle', questionIdx: 0, buzz: null, votes: {} },
+  });
+
+  console.log(`[DadaShow] Salle créée : ${code}`);
+  return code;
+}
+
+/**
+ * Rejoindre une salle existante
+ * @param {string} code      - Code 4 chiffres
+ * @param {string} playerName
+ * @returns {string|null} playerId ou null si salle inexistante
+ */
+async function joinRoom(code, playerName) {
+  const room = await fbGet(`rooms/${code}/meta`);
+  if (!room) {
+    console.error(`[DadaShow] Salle ${code} introuvable`);
+    return null;
+  }
+
+  // Attribuer une équipe automatiquement (la moins peuplée)
+  const players = await fbGet(`rooms/${code}/players`) || {};
+  const teamCounts = { t0: 0, t1: 0, t2: 0 };
+  Object.values(players).forEach(p => { if (teamCounts[p.teamId] !== undefined) teamCounts[p.teamId]++; });
+  const teamId = Object.entries(teamCounts).sort((a,b) => a[1]-b[1])[0][0];
+
+  const playerId = `p_${Date.now()}_${Math.random().toString(36).slice(2,6)}`;
+  await fbSet(`rooms/${code}/players/${playerId}`, {
+    name: playerName,
+    teamId,
+    score: 0,
+    online: true,
+    joinedAt: Date.now(),
+  });
+
+  console.log(`[DadaShow] ${playerName} a rejoint la salle ${code} (équipe ${teamId})`);
+  return playerId;
+}
+
+/**
+ * Quitter / déconnecter un joueur
+ */
+async function leaveRoom(code, playerId) {
+  await fbUpdate(`rooms/${code}/players/${playerId}`, { online: false });
+}
+
+/**
+ * Lancer un jeu depuis le GM
+ */
+async function startGame(code, gameType) {
+  await fbUpdate(`rooms/${code}`, {
+    'meta/state': 'playing',
+    'meta/currentGame': gameType,
+    'game/type': gameType,
+    'game/state': 'idle',
+    'game/questionIdx': 0,
+    'game/buzz': null,
+    'game/votes': {},
+  });
+}
